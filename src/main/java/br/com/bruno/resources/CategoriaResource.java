@@ -1,29 +1,29 @@
 package br.com.bruno.resources;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.bruno.domain.Categoria;
+import br.com.bruno.services.CategoriaService;
 
 @RestController
 @RequestMapping(value = "/categorias")
 public class CategoriaResource implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	@Autowired
+	private CategoriaService service;
 
-	@RequestMapping(method = RequestMethod.GET)
-	public List<Categoria> listar() {
-		Categoria cat1 = new Categoria(1, "Informática");
-		Categoria cat2 = new Categoria(2, "Escritório");
-
-		List<Categoria> categorias = new ArrayList<>();
-		categorias.add(cat1);
-		categorias.add(cat2);
-
-		return categorias;
+	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> find(@PathVariable Integer id) {
+		Optional<Categoria> obj = service.buscar(id);
+		return ResponseEntity.ok().body(obj);
 	}
 }
